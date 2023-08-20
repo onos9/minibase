@@ -2,7 +2,7 @@
 version: '3.1'
 
 volumes:
-  postgres_data:
+  pgdata:
   redis_data:
 
 services:
@@ -32,25 +32,15 @@ services:
     container_name: postgresdb
     build:
         context: .
-        dockerfile: ./docker/Dockerfile
     ports:
       - 5406:5432
-    healthcheck:
-      test: ["CMD-SHELL", "PGUSER=cavelms", "pg_isready"]
-      interval: 1s
-      timeout: 10s
-      retries: 5
     environment:
       POSTGRES_USER: cavelms
       POSTGRES_PASSWORD: 1414{bruno}
       POSTGRES_DB: cavelms
     volumes: 
-      - ./docker/extension/pgjwt.control:/usr/share/postgresql/15/extension/pgjwt.control
-      - ./docker/extension/pgjwt--0.1.0--0.1.1.sql:/usr/share/postgresql/15/extension/pgjwt--0.1.0--0.1.1.sql
-      - ./docker/extension/pgjwt--0.1.1.sql:/usr/share/postgresql/15/extension/pgjwt--0.1.1.sql
-      - ./docker/extension/pgjwt--0.1.1--0.2.0.sql:/usr/share/postgresql/15/extension/pgjwt--0.1.1--0.2.0.sql
-      - ./docker/scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
-      - ./docker/pgdata:/var/lib/postgresql/data
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init01.sql
+      - pgdata:/var/lib/postgresql/data
  
   postgrest:
     container_name: postgrest
@@ -59,19 +49,20 @@ services:
     ports:
       - 3001:3000
     environment:
-      PGRST_DB_URI: postgres://cavelms:1414{bruno}@postgresdb:5432/cavelms
-      PGRST_DB_SCHEMA: public
+      PGRST_DB_URI: postgres://authenticator:1414{bruno}@postgresdb:5432/cavelms
+      PGRST_DB_SCHEMA: api
       PGRST_DB_ANON_ROLE: anonymous
       PGRST_JWT_SECRET: Q!6HLp@B5wD24Pbq*LNd!%S4&H%ly7bt
+      PGRST_DB_PRE_REQUEST: "auth.authenticate"
     depends_on:
       - postgresdb
     
   graphiql:
-    container_name: pg_graphiql
+    container_name: graphiql
     restart: unless-stopped
     image: nginx
     volumes:
-      - ./docker/graphiql:/usr/share/nginx/html
+      - ./graphiql:/usr/share/nginx/html
     ports:
       - 4000:80
     depends_on:

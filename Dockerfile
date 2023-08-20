@@ -10,6 +10,10 @@ RUN wget https://github.com/pksunkara/pgx_ulid/releases/download/v0.1.1/pgx_ulid
 RUN dpkg -i pg_graphql-v1.3.0-pg15-amd64-linux-gnu.deb
 RUN dpkg -i pgx_ulid-v0.1.1-pg15-amd64-linux-gnu.deb
 
+COPY ./extension /tmp/extension
+RUN mv /tmp/extension/* /usr/share/postgresql/15/extension/ && \
+    rm -rf /tmp/extension
+
 USER postgres
 
 CMD [ "postgres", "-c", "wal_level=logical", "-c", "shared_preload_libraries=pg_stat_statements" ]
