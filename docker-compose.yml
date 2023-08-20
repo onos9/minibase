@@ -28,10 +28,10 @@ services:
     volumes:
       - redis_data:/data
     
-  postgresdb:
-    container_name: postgresdb
-    build:
-        context: .
+  minibase:
+    container_name: minibase
+    image: ghcr.io/onos9/onos9/minibase:latest
+    restart: unless-stopped
     ports:
       - 5406:5432
     environment:

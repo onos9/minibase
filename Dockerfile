@@ -14,6 +14,7 @@ COPY ./extension /tmp/extension
 RUN mv /tmp/extension/* /usr/share/postgresql/15/extension/ && \
     rm -rf /tmp/extension
 
+COPY ./scripts/init.sql /docker-entrypoint-initdb.d/init01.sql
 USER postgres
 
 CMD [ "postgres", "-c", "wal_level=logical", "-c", "shared_preload_libraries=pg_stat_statements" ]
