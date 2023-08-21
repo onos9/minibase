@@ -77,7 +77,7 @@ RAISE WARNING 'request.jwt.claims = %',
 current_setting('request.jwt.claims');
 EXCEPTION
 WHEN OTHERS THEN RAISE WARNING 'request.jwt.claims = (no way)';
-IF email = 'beznet22@gmail.com' THEN RAISE EXCEPTION 'No, you are evil' USING HINT = 'Stop being so evil and maybe you can log in';
+-- IF email = 'beznet22@gmail.com' THEN RAISE EXCEPTION 'No, you are evil' USING HINT = 'Stop being so evil and maybe you can log in';
 END IF;
 END $$ LANGUAGE plpgsql;
 GRANT EXECUTE ON FUNCTION auth.authenticate TO anonymous;
