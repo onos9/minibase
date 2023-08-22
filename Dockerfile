@@ -17,6 +17,5 @@ RUN mv /tmp/extension/* /usr/share/postgresql/15/extension/ && \
 
 COPY ./scripts/init.sql /docker-entrypoint-initdb.d/init01.sql
 USER postgres
-COPY --from=builder /go/bin/minibase /minibase
 
 CMD [ "postgres", "-c", "wal_level=logical", "-c", "shared_preload_libraries=pg_stat_statements" ]
