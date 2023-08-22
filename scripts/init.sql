@@ -4,6 +4,7 @@ CREATE EXTENSION IF NOT EXISTS ulid;
 
 CREATE ROLE anonymous NOLOGIN;
 
+CREATE SCHEMA api;
 GRANT usage ON schema api TO anonymous;
 ALTER DEFAULT PRIVILEGES IN SCHEMA api
 GRANT All ON tables TO anonymous;
@@ -35,6 +36,8 @@ select graphql.resolve(
     extensions := extensions
   );
 $$;
+
+comment on schema public is '@graphql({"inflect_names": true})';
 
 CREATE OR REPLACE FUNCTION api.ulid() RETURNS text LANGUAGE sql STABLE AS $$
 SELECT gen_ulid()::TEXT; $$;
