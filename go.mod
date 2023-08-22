@@ -8,7 +8,7 @@ require (
 	github.com/harranali/authority v1.2.0
 	github.com/joho/godotenv v1.3.0
 	gorm.io/driver/postgres v1.5.2
-	gorm.io/gorm v1.25.0
+	gorm.io/gorm v1.25.4
 )
 
 require (

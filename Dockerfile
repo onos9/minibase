@@ -1,8 +1,9 @@
+################################################################
 FROM postgres:15
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends ca-certificates wget
+RUN apt update
+RUN apt install -y --no-install-recommends ca-certificates wget
 
-WORKDIR /home/pg_graphql
+WORKDIR /app
 
 RUN wget https://github.com/supabase/pg_graphql/releases/download/v1.3.0/pg_graphql-v1.3.0-pg15-amd64-linux-gnu.deb
 RUN wget https://github.com/pksunkara/pgx_ulid/releases/download/v0.1.1/pgx_ulid-v0.1.1-pg15-amd64-linux-gnu.deb
@@ -16,5 +17,6 @@ RUN mv /tmp/extension/* /usr/share/postgresql/15/extension/ && \
 
 COPY ./scripts/init.sql /docker-entrypoint-initdb.d/init01.sql
 USER postgres
+COPY --from=builder /go/bin/minibase /minibase
 
 CMD [ "postgres", "-c", "wal_level=logical", "-c", "shared_preload_libraries=pg_stat_statements" ]

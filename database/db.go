@@ -11,7 +11,6 @@ import (
 )
 
 var DB *gorm.DB
-var AUTH *authority.Authority
 
 // ConnectDB connect to db
 func ConnectDB() {
@@ -28,18 +27,9 @@ func ConnectDB() {
 	if err != nil {
 		panic("failed to connect database")
 	}
-	initAuthority()
-}
 
-func initAuthority() {
-	AUTH = authority.New(authority.Options{
+	_ = authority.New(authority.Options{
 		TablesPrefix: "authority_",
 		DB:           DB,
-	})
-
-	// create role
-	_ = AUTH.CreateRole(authority.Role{
-		Name: "Role 1",
-		Slug: "role-1",
 	})
 }

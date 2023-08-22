@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"minibase/database"
+	"minibase/handler"
 	"minibase/middleware"
 
 	"github.com/gofiber/fiber/v2"
@@ -26,9 +27,11 @@ func main() {
 
 	app.Use(cors.New())
 
+	handler.SetupRoutes(app)
 	api := app.Group("/api", logger.New())
-	api.Get("/", graphql)
 	api.Get("/graphql", middleware.Protected(), graphql)
+	api.Get("/", graphql)
+
 	log.Fatal(app.Listen(":3000"))
 }
 
